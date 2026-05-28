@@ -1,0 +1,6 @@
+@RyHCarRental_HostAddress = http://localhost:5293
+
+GET {{RyHCarRental_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

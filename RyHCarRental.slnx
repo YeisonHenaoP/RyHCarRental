@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="RyHCarRental.DataAccess/RyHCarRental.DataAccess.csproj" />
+  <Project Path="RyHCarRental.Domain/RyHCarRental.Domain.csproj" />
+  <Project Path="RyHCarRental/RyHCarRental.API.csproj" />
+</Solution>
