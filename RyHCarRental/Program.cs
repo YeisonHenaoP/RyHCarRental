@@ -1,35 +1,42 @@
 using Microsoft.EntityFrameworkCore;
 using RyHCarRental.API.Mappings;
-using RyHCarRental.API.Services;
 using RyHCarRental.DataAccess.Context;
 using RyHCarRental.DataAccess.Repositories;
-using RyHCarRental.Domain.Interfaces;
+using RyHCarRental.DataAccess.Seeders;
+using RyHCarRental.Domain.Interfaces.Repositories;
+using RyHCarRental.Domain.Interfaces.Services;
+using RyHCarRental.Domain.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add Repositories
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IRentalRepository, RentalRepository>();
+builder.Services.AddScoped<IVehicleTypeRepository, VehicleTypeRepository>();
+builder.Services.AddScoped<IBranchRepository, BranchRepository>();
 
-// Add Services
-builder.Services.AddScoped<RentalService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IVehicleTypeService, VehicleTypeService>();
+builder.Services.AddScoped<IBranchService, BranchService>();
+builder.Services.AddScoped<IRentalService, RentalService>();
 
-// Add AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await context.Database.MigrateAsync();
+    await DataSeeder.SeedAsync(context);
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -37,9 +44,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

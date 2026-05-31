@@ -1,6 +1,6 @@
-﻿using RyHCarRental.Domain.Entities;
+using RyHCarRental.Domain.Entities;
 
-namespace RyHCarRental.Domain.Interfaces
+namespace RyHCarRental.Domain.Interfaces.Repositories
 {
     public interface IRentalRepository : IGenericRepository<Rental>
     {

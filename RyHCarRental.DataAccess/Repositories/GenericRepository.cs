@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RyHCarRental.DataAccess.Context;
-using RyHCarRental.Domain.Interfaces;
+using RyHCarRental.Domain.Interfaces.Repositories;
 
 namespace RyHCarRental.DataAccess.Repositories
 {

@@ -13,6 +13,12 @@ namespace RyHCarRental.API.Mappings
             CreateMap<Customer, CustomerDto>();
             CreateMap<CustomerCreateDto, Customer>();
 
+            CreateMap<VehicleType, VehicleTypeDto>();
+            CreateMap<VehicleTypeCreateDto, VehicleType>();
+
+            CreateMap<Branch, BranchDto>();
+            CreateMap<BranchCreateDto, Branch>();
+
             // Rental mappings
             CreateMap<Rental, RentalDto>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))

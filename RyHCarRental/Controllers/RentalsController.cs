@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using RyHCarRental.API.DTOs;
-using RyHCarRental.API.Services;
+using RyHCarRental.Domain.Entities;
+using RyHCarRental.Domain.Interfaces.Services;
 
 namespace RyHCarRental.API.Controllers
 {
@@ -8,18 +10,20 @@ namespace RyHCarRental.API.Controllers
     [ApiController]
     public class RentalsController : ControllerBase
     {
-        private readonly RentalService _rentalService;
+        private readonly IRentalService _rentalService;
+        private readonly IMapper _mapper;
 
-        public RentalsController(RentalService rentalService)
+        public RentalsController(IRentalService rentalService, IMapper mapper)
         {
             _rentalService = rentalService;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var rentals = await _rentalService.GetAllAsync();
-            return Ok(rentals);
+            return Ok(_mapper.Map<IEnumerable<RentalDto>>(rentals));
         }
 
         [HttpGet("{id}")]
@@ -27,8 +31,8 @@ namespace RyHCarRental.API.Controllers
         {
             var rental = await _rentalService.GetByIdAsync(id);
             if (rental == null)
-                return NotFound();
-            return Ok(rental);
+                return NotFound(new { message = $"Alquiler con ID {id} no encontrado" });
+            return Ok(_mapper.Map<RentalDto>(rental));
         }
 
         [HttpPost]
@@ -36,16 +40,17 @@ namespace RyHCarRental.API.Controllers
         {
             try
             {
-                var created = await _rentalService.CreateAsync(dto);
-                return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+                var rental = _mapper.Map<Rental>(dto);
+                var created = await _rentalService.CreateAsync(rental, dto.VehicleIds);
+                return CreatedAtAction(nameof(GetById), new { id = created.Id }, _mapper.Map<RentalDto>(created));
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new { message = ex.Message });
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex.Message });
             }
         }
 
@@ -59,11 +64,11 @@ namespace RyHCarRental.API.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new { message = ex.Message });
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex.Message });
             }
         }
 
@@ -77,11 +82,11 @@ namespace RyHCarRental.API.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new { message = ex.Message });
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex.Message });
             }
         }
     }

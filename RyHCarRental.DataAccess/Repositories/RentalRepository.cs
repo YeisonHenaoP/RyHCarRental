@@ -2,7 +2,7 @@
 using RyHCarRental.DataAccess.Context;
 using RyHCarRental.Domain.Entities;
 using RyHCarRental.Domain.Enums;
-using RyHCarRental.Domain.Interfaces;
+using RyHCarRental.Domain.Interfaces.Repositories;
 
 namespace RyHCarRental.DataAccess.Repositories
 {

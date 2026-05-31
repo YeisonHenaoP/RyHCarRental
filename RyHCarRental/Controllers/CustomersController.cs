@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RyHCarRental.API.DTOs;
 using RyHCarRental.Domain.Entities;
-using RyHCarRental.Domain.Interfaces;
+using RyHCarRental.Domain.Interfaces.Services;
 
 namespace RyHCarRental.API.Controllers
 {
@@ -10,38 +10,44 @@ namespace RyHCarRental.API.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly IGenericRepository<Customer> _customerRepository;
+        private readonly ICustomerService _customerService;
         private readonly IMapper _mapper;
 
-        public CustomersController(IGenericRepository<Customer> customerRepository, IMapper mapper)
+        public CustomersController(ICustomerService customerService, IMapper mapper)
         {
-            _customerRepository = customerRepository;
+            _customerService = customerService;
             _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var customers = await _customerRepository.GetAllAsync();
+            var customers = await _customerService.GetAllAsync();
             return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var customer = await _customerRepository.GetByIdAsync(id);
+            var customer = await _customerService.GetByIdAsync(id);
             if (customer == null)
-                return NotFound();
+                return NotFound(new { message = $"Cliente con ID {id} no encontrado" });
             return Ok(_mapper.Map<CustomerDto>(customer));
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(CustomerCreateDto dto)
         {
-            var customer = _mapper.Map<Customer>(dto);
-            await _customerRepository.AddAsync(customer);
-            await _customerRepository.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = customer.Id }, _mapper.Map<CustomerDto>(customer));
+            try
+            {
+                var created = await _customerService.CreateAsync(_mapper.Map<Customer>(dto));
+                var response = _mapper.Map<CustomerDto>(created);
+                return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }
