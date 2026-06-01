@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using RyHCarRental.API.DTOs;
+using RyHCarRental.API.DTOs.Request;
+using RyHCarRental.API.DTOs.Response;
 using RyHCarRental.Domain.Interfaces.Services;
 
 namespace RyHCarRental.API.Controllers
@@ -22,7 +23,7 @@ namespace RyHCarRental.API.Controllers
         public async Task<IActionResult> GetAll()
         {
             var branches = await _branchService.GetAllAsync();
-            return Ok(_mapper.Map<IEnumerable<BranchDto>>(branches));
+            return Ok(_mapper.Map<IEnumerable<BranchResponseDto>>(branches));
         }
 
         [HttpGet("{id}")]
@@ -31,16 +32,16 @@ namespace RyHCarRental.API.Controllers
             var branch = await _branchService.GetByIdAsync(id);
             if (branch == null)
                 return NotFound(new { message = $"Sucursal con ID {id} no encontrada" });
-            return Ok(_mapper.Map<BranchDto>(branch));
+            return Ok(_mapper.Map<BranchResponseDto>(branch));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(BranchCreateDto dto)
+        public async Task<IActionResult> Create(BranchRequestDto dto)
         {
             try
             {
                 var created = await _branchService.CreateAsync(_mapper.Map<Domain.Entities.Branch>(dto));
-                var response = _mapper.Map<BranchDto>(created);
+                var response = _mapper.Map<BranchResponseDto>(created);
                 return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
             catch (InvalidOperationException ex)
@@ -50,7 +51,7 @@ namespace RyHCarRental.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, BranchCreateDto dto)
+        public async Task<IActionResult> Update(int id, BranchRequestDto dto)
         {
             try
             {

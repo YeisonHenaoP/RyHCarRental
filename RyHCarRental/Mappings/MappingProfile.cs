@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using RyHCarRental.API.DTOs;
+using RyHCarRental.API.DTOs.Request;
+using RyHCarRental.API.DTOs.Response;
 using RyHCarRental.Domain.Entities;
-using RyHCarRental.Domain.Enums;
 
 namespace RyHCarRental.API.Mappings
 {
@@ -9,42 +9,38 @@ namespace RyHCarRental.API.Mappings
     {
         public MappingProfile()
         {
-            // Customer mappings
-            CreateMap<Customer, CustomerDto>();
-            CreateMap<CustomerCreateDto, Customer>();
+            CreateMap<Customer, CustomerResponseDto>();
+            CreateMap<CustomerRequestDto, Customer>();
 
-            CreateMap<VehicleType, VehicleTypeDto>();
-            CreateMap<VehicleTypeCreateDto, VehicleType>();
+            CreateMap<VehicleType, VehicleTypeResponseDto>();
+            CreateMap<VehicleTypeRequestDto, VehicleType>();
 
-            CreateMap<Branch, BranchDto>();
-            CreateMap<BranchCreateDto, Branch>();
+            CreateMap<Branch, BranchResponseDto>();
+            CreateMap<BranchRequestDto, Branch>();
 
-            CreateMap<Vehicle, VehicleDto>()
+            CreateMap<Vehicle, VehicleResponseDto>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
                 .ForMember(dest => dest.VehicleTypeName, opt => opt.MapFrom(src => src.VehicleType != null ? src.VehicleType.Name : null))
                 .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch != null ? src.Branch.Name : null));
-            CreateMap<VehicleCreateDto, Vehicle>()
+            CreateMap<VehicleRequestDto, Vehicle>()
                 .ForMember(dest => dest.Status, opt => opt.Ignore())
                 .ForMember(dest => dest.VehicleType, opt => opt.Ignore())
                 .ForMember(dest => dest.Branch, opt => opt.Ignore());
-            CreateMap<VehicleUpdateDto, Vehicle>()
+            CreateMap<VehicleUpdateRequestDto, Vehicle>()
                 .ForMember(dest => dest.Status, opt => opt.Ignore())
                 .ForMember(dest => dest.VehicleType, opt => opt.Ignore())
                 .ForMember(dest => dest.Branch, opt => opt.Ignore());
 
-            // Rental mappings
-            CreateMap<Rental, RentalDto>()
+            CreateMap<Rental, RentalResponseDto>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
                 .ForMember(dest => dest.RentalDetails, opt => opt.MapFrom(src => src.RentalDetails));
 
-            // RentalDetail mappings
-            CreateMap<RentalDetail, RentalDetailDto>()
+            CreateMap<RentalDetail, RentalDetailResponseDto>()
                 .ForMember(dest => dest.VehicleModel, opt => opt.MapFrom(src => src.Vehicle.Model))
                 .ForMember(dest => dest.SubTotal, opt => opt.MapFrom(src => src.SubTotal));
 
-            // RentalCreateDto to Rental (ignoramos propiedades que se calculan)
-            CreateMap<RentalCreateDto, Rental>()
+            CreateMap<RentalRequestDto, Rental>()
                 .ForMember(dest => dest.RentalDetails, opt => opt.Ignore())
                 .ForMember(dest => dest.TotalCost, opt => opt.Ignore())
                 .ForMember(dest => dest.Status, opt => opt.Ignore())

@@ -194,6 +194,8 @@ RyHCarRental/
 ├── RyHCarRental/                    # API
 │   ├── Controllers/
 │   ├── DTOs/
+│   │   ├── Request/                 # Datos que envía el cliente (POST/PUT)
+│   │   └── Response/                # Datos que devuelve la API (GET)
 │   ├── Mappings/
 │   └── Program.cs
 ├── RyHCarRental.Domain/             # Negocio
@@ -226,6 +228,72 @@ git push -u origin feature/nombre-tarea
 Abrir Pull Request hacia `master` en GitHub.
 
 **Verbos recomendados:** `add`, `update`, `fix`, `remove`, `add migration`
+
+---
+
+## Frontend (pendiente)
+
+El proyecto final exige **Backend + Frontend**. El backend ya expone la API; el frontend debe consumirla.
+
+### Requisitos mínimos (ITM)
+
+| Requisito | Detalle |
+|-----------|---------|
+| Framework | Angular, React, Vue, Blazor u otro moderno |
+| Consumo de API | HTTP hacia `http://localhost:5293/api/...` |
+| 3+ vistas | Listado, formulario, detalle o listado secundario |
+| Routing | Navegación entre pantallas |
+| UI presentable | Bootstrap, Angular Material, Tailwind, etc. |
+
+### Vistas sugeridas
+
+1. **Vehículos** — listado (`GET /api/Vehicles`)
+2. **Nuevo alquiler** — formulario (`POST /api/Rentals`)
+3. **Alquileres** — listado y acciones complete/cancel (`GET /api/Rentals`, `PUT /api/Rentals/{id}/complete`)
+
+### Estructura recomendada en el repo
+
+```
+RyHCarRental/
+├── RyHCarRental/              # Backend API
+├── RyHCarRental.Domain/
+├── RyHCarRental.DataAccess/
+└── ryh-car-rental-web/        # Crear: proyecto frontend
+```
+
+### Configuración necesaria
+
+1. **CORS en el backend** — permitir el origen del frontend (ej. `http://localhost:4200`).
+2. **URL base de la API** — variable de entorno en el frontend apuntando a `http://localhost:5293/api`.
+3. **Models TypeScript** — alineados con los DTOs **Response** del backend (`VehicleResponseDto`, `RentalRequestDto`, etc.).
+
+### Ejecutar full-stack (cuando exista el frontend)
+
+**Terminal 1 — Backend:**
+
+```bash
+dotnet run --project RyHCarRental/RyHCarRental.API.csproj
+```
+
+**Terminal 2 — Frontend** (ejemplo Angular):
+
+```bash
+cd ryh-car-rental-web
+npm install
+ng serve
+```
+
+Documentar aquí los comandos exactos cuando el framework esté elegido.
+
+### Commits del frontend
+
+Usar la misma convención en inglés y la **cuenta GitHub de quien desarrolle** esa parte:
+
+```bash
+git checkout -b feature/frontend-initial-setup
+git commit -m "add Angular project with vehicle list page"
+git push -u origin feature/frontend-initial-setup
+```
 
 ---
 

@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using RyHCarRental.API.DTOs;
+using RyHCarRental.API.DTOs.Request;
+using RyHCarRental.API.DTOs.Response;
 using RyHCarRental.Domain.Interfaces.Services;
 
 namespace RyHCarRental.API.Controllers
@@ -22,7 +23,7 @@ namespace RyHCarRental.API.Controllers
         public async Task<IActionResult> GetAll()
         {
             var types = await _vehicleTypeService.GetAllAsync();
-            return Ok(_mapper.Map<IEnumerable<VehicleTypeDto>>(types));
+            return Ok(_mapper.Map<IEnumerable<VehicleTypeResponseDto>>(types));
         }
 
         [HttpGet("{id}")]
@@ -31,16 +32,16 @@ namespace RyHCarRental.API.Controllers
             var type = await _vehicleTypeService.GetByIdAsync(id);
             if (type == null)
                 return NotFound(new { message = $"Tipo de vehículo con ID {id} no encontrado" });
-            return Ok(_mapper.Map<VehicleTypeDto>(type));
+            return Ok(_mapper.Map<VehicleTypeResponseDto>(type));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(VehicleTypeCreateDto dto)
+        public async Task<IActionResult> Create(VehicleTypeRequestDto dto)
         {
             try
             {
                 var created = await _vehicleTypeService.CreateAsync(_mapper.Map<Domain.Entities.VehicleType>(dto));
-                var response = _mapper.Map<VehicleTypeDto>(created);
+                var response = _mapper.Map<VehicleTypeResponseDto>(created);
                 return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
             catch (InvalidOperationException ex)
@@ -50,7 +51,7 @@ namespace RyHCarRental.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, VehicleTypeCreateDto dto)
+        public async Task<IActionResult> Update(int id, VehicleTypeRequestDto dto)
         {
             try
             {

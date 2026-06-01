@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using RyHCarRental.API.DTOs;
+using RyHCarRental.API.DTOs.Request;
+using RyHCarRental.API.DTOs.Response;
 using RyHCarRental.Domain.Entities;
 using RyHCarRental.Domain.Interfaces.Services;
 
@@ -23,7 +24,7 @@ namespace RyHCarRental.API.Controllers
         public async Task<IActionResult> GetAll()
         {
             var rentals = await _rentalService.GetAllAsync();
-            return Ok(_mapper.Map<IEnumerable<RentalDto>>(rentals));
+            return Ok(_mapper.Map<IEnumerable<RentalResponseDto>>(rentals));
         }
 
         [HttpGet("{id}")]
@@ -32,17 +33,17 @@ namespace RyHCarRental.API.Controllers
             var rental = await _rentalService.GetByIdAsync(id);
             if (rental == null)
                 return NotFound(new { message = $"Alquiler con ID {id} no encontrado" });
-            return Ok(_mapper.Map<RentalDto>(rental));
+            return Ok(_mapper.Map<RentalResponseDto>(rental));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(RentalCreateDto dto)
+        public async Task<IActionResult> Create(RentalRequestDto dto)
         {
             try
             {
                 var rental = _mapper.Map<Rental>(dto);
                 var created = await _rentalService.CreateAsync(rental, dto.VehicleIds);
-                return CreatedAtAction(nameof(GetById), new { id = created.Id }, _mapper.Map<RentalDto>(created));
+                return CreatedAtAction(nameof(GetById), new { id = created.Id }, _mapper.Map<RentalResponseDto>(created));
             }
             catch (KeyNotFoundException ex)
             {
