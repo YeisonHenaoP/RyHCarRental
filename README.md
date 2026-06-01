@@ -11,11 +11,10 @@ Repositorio: [https://github.com/YeisonHenaoP/RyHCarRental](https://github.com/Y
 
 | Nombre | GitHub | Rol principal |
 |--------|--------|---------------|
-| Yeison Henao | YeisonHenaoP | Backend / API |
-| [Tu nombre completo] | aramirez22itm | Backend / Domain |
-| [Integrante 3] | — | Frontend (pendiente) |
+| Yeison David Henao Pareja | [YeisonHenaoP](https://github.com/YeisonHenaoP) | Backend / API |
+| Alexander Ramirez | [aramirez22itm](https://github.com/aramirez22itm) | Backend / Domain |
 
-> Actualiza esta tabla con los nombres reales antes de la entrega.
+> Grupo de 2 integrantes. Frontend pendiente de implementación.
 
 ---
 
