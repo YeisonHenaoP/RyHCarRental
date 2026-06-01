@@ -19,6 +19,19 @@ namespace RyHCarRental.API.Mappings
             CreateMap<Branch, BranchDto>();
             CreateMap<BranchCreateDto, Branch>();
 
+            CreateMap<Vehicle, VehicleDto>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
+                .ForMember(dest => dest.VehicleTypeName, opt => opt.MapFrom(src => src.VehicleType != null ? src.VehicleType.Name : null))
+                .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch != null ? src.Branch.Name : null));
+            CreateMap<VehicleCreateDto, Vehicle>()
+                .ForMember(dest => dest.Status, opt => opt.Ignore())
+                .ForMember(dest => dest.VehicleType, opt => opt.Ignore())
+                .ForMember(dest => dest.Branch, opt => opt.Ignore());
+            CreateMap<VehicleUpdateDto, Vehicle>()
+                .ForMember(dest => dest.Status, opt => opt.Ignore())
+                .ForMember(dest => dest.VehicleType, opt => opt.Ignore())
+                .ForMember(dest => dest.Branch, opt => opt.Ignore());
+
             // Rental mappings
             CreateMap<Rental, RentalDto>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))

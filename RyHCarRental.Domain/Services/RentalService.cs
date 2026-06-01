@@ -9,12 +9,12 @@ namespace RyHCarRental.Domain.Services
     {
         private readonly IRentalRepository _rentalRepository;
         private readonly IGenericRepository<Customer> _customerRepository;
-        private readonly IGenericRepository<Vehicle> _vehicleRepository;
+        private readonly IVehicleRepository _vehicleRepository;
 
         public RentalService(
             IRentalRepository rentalRepository,
             IGenericRepository<Customer> customerRepository,
-            IGenericRepository<Vehicle> vehicleRepository)
+            IVehicleRepository vehicleRepository)
         {
             _rentalRepository = rentalRepository;
             _customerRepository = customerRepository;
