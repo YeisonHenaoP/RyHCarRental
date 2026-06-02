@@ -131,6 +131,8 @@ namespace RyHCarRental.Domain.Services
                 throw new InvalidOperationException("Solo se pueden cancelar alquileres activos.");
 
             rental.Status = RentalStatus.Cancelled;
+            rental.TotalCost = 0;  // ← al cancelar el costo queda en cero
+
             _rentalRepository.Update(rental);
 
             foreach (var detail in rental.RentalDetails)
